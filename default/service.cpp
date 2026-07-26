@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "MiLahainaFaceHal"
+#define LOG_TAG "ExtraFaceHal"
 
 #include "Face.h"
 #include "FaceTemplateSerializer.h"
@@ -33,7 +33,7 @@ using org::milahaina::face::hal::VisionServiceImpl;
 
 int main(int argc, char** argv) {
   android::base::InitLogging(argv, android::base::LogdLogger(android::base::MAIN));
-  ALOGI("MiLahainaFaceHal starting...");
+  ALOGI("ExtraFaceHal starting...");
 
   if (FaceTemplateSerializer::CURRENT_VERSION == 0) {
     ALOGW("FaceTemplateSerializer::CURRENT_VERSION is not set by the engine library! Using fallback version 1.");
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
   }
   ALOGI("Face HAL registered successfully: %s", faceInstance.c_str());
 
-  // Register the vendor IVisionService (for MiLahainaVision enrollment UI)
+  // Register the vendor IVisionService (for ExtraVision enrollment UI)
   // This is a VINTF-stable service provider.
   std::shared_ptr<VisionServiceImpl> vision =
       ndk::SharedRefBase::make<VisionServiceImpl>();
@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
   }
 
   const std::string visionInstance =
-      "vendor.milahaina.biometrics.face.IVisionService/default";
+      "vendor.extra.biometrics.face.IVisionService/default";
   status = AServiceManager_addService(vision->asBinder().get(),
                                       visionInstance.c_str());
   if (status != STATUS_OK) {
@@ -85,10 +85,10 @@ int main(int argc, char** argv) {
 
   CameraClient::warmUpAtHalStart();
 
-  ALOGI("MiLahainaFaceHal is ready and serving");
+  ALOGI("ExtraFaceHal is ready and serving");
   ABinderProcess_joinThreadPool();
 
   // Should never reach here
-  ALOGE("MiLahainaFaceHal binder thread pool exited unexpectedly");
+  ALOGE("ExtraFaceHal binder thread pool exited unexpectedly");
   return EXIT_FAILURE;
 }

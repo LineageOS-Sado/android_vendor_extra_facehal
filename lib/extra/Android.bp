@@ -1,0 +1,31 @@
+soong_namespace {
+}
+
+cc_prebuilt_library_shared {
+    name: "libextra_face_engine",
+    owner: "extra",
+    strip: {
+        none: true,
+    },
+    target: {
+        android_arm64: {
+            srcs: [
+                "libextra_face_engine.so",
+            ],
+            shared_libs: [
+                "android.hardware.biometrics.face-V4-ndk",
+                "android.hardware.biometrics.common-V4-ndk",
+                "android.system.keystore2-V1-ndk",
+                "libbase",
+                "libcrypto",
+                "libcutils",
+                "liblog",
+                "libsensorndkbridge",
+                "libutils",
+            ],
+        },
+    },
+    compile_multilib: "64",
+    prefer: true,
+    soc_specific: true,
+}

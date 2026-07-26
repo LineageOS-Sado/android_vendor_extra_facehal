@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "MiLahainaFaceHal"
+#define LOG_TAG "ExtraFaceHal"
 #include <log/log.h>
 #include "VisionServiceImpl.h"
 #include "FaceEngine.h"
@@ -55,7 +55,7 @@ ScopedAStatus VisionServiceImpl::onFrame(const ::ndk::ScopedFileDescriptor &fd,
   return ScopedAStatus::ok();
 }
 
-ScopedAStatus VisionServiceImpl::setCallback(const std::shared_ptr<::aidl::vendor::milahaina::biometrics::face::IVisionService> &callback) {
+ScopedAStatus VisionServiceImpl::setCallback(const std::shared_ptr<::aidl::vendor::extra::biometrics::face::IVisionService> &callback) {
   std::lock_guard<std::mutex> lock(mCallbackMutex);
   mCallback = callback;
   LOG(INFO) << "VisionService callback registered (using IVisionService interface)";
@@ -76,7 +76,7 @@ int VisionServiceImpl::onCameraFrame(const std::vector<uint8_t> &frame, int widt
   // Full-rate 640x480 NV21 is too large to send as Binder byte[] continuously.
   // Send only an fd through Binder; the app reads the frame bytes from ashmem.
   const size_t size = frame.size();
-  int fd = ashmem_create_region("MiLahainaFaceFrame", size);
+  int fd = ashmem_create_region("ExtraFaceFrame", size);
   if (fd < 0) {
       LOG(ERROR) << "Failed to create ashmem: " << strerror(errno);
       return -1;

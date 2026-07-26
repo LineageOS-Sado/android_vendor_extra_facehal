@@ -1,6 +1,6 @@
-# MiLahaina Face HAL
+# Extra Face HAL
 
-This repository contains the biometric Face Hardware Abstraction Layer (HAL) implementation for the MiLahaina project, supporting Android's stable AIDL interfaces (`android.hardware.biometrics.face`).
+This repository contains the biometric Face Hardware Abstraction Layer (HAL) implementation for the Extra project, supporting Android's stable AIDL interfaces (`android.hardware.biometrics.face`).
 
 > [!NOTE]
 > This is a hobby project shared/made for educational and experimentation purposes. No one has any obligation to use it. You have full access to the source code and can design/integrate your own face unlock logic.
@@ -9,24 +9,24 @@ This repository contains the biometric Face Hardware Abstraction Layer (HAL) imp
 
 To integrate this Face HAL implementation into your device build:
 
-1. Clone this repository into your AOSP root (e.g., under `vendor/milahaina/facehal`):
+1. Clone this repository into your AOSP root (e.g., under `vendor/extra/facehal`):
    ```bash
-   git clone https://github.com/IPSBHANGU/AOSP-FACEHAL vendor/milahaina/facehal
+   git clone https://github.com/IPSBHANGU/AOSP-FACEHAL vendor/extra/facehal
    ```
 2. Inherit/include `facehal.mk` in your device's configuration Makefile (`device.mk`):
    ```makefile
-   $(call inherit-product, vendor/milahaina/facehal/facehal.mk)
+   $(call inherit-product, vendor/extra/facehal/facehal.mk)
    ```
 3. (Optional) Configure build system flags in your `device.mk` before inheriting `facehal.mk`:
-   * **Engine Model Selection** (default is `milahaina`):
+   * **Engine Model Selection** (default is `extra`):
      ```makefile
-     # Select "milahaina" or "megvii"
-     MILAHAINA_FACEHAL_ENGINE_MODEL := milahaina
+     # Select "extra" or "megvii"
+     EXTRA_FACEHAL_ENGINE_MODEL := extra
      ```
    * **Logging Control** (default is `false`):
      ```makefile
      # Set to true to enable verbose HAL service debug logging
-     MILAHAINA_FACEHAL_ENABLE_LOGGING := true
+     EXTRA_FACEHAL_ENABLE_LOGGING := true
      ```
 
 
@@ -34,7 +34,7 @@ To integrate this Face HAL implementation into your device build:
 
 ## How It Works: High-Level Architecture
 
-The MiLahaina Face HAL is designed with a modular separation of concerns between open-source framework glue and proprietary/compiled biometric engines.
+The Extra Face HAL is designed with a modular separation of concerns between open-source framework glue and proprietary/compiled biometric engines.
 
 ```
                   +-----------------------------------------+
@@ -47,35 +47,35 @@ The MiLahaina Face HAL is designed with a modular separation of concerns between
                   |          HAL Daemon (Service)           |
                   +--------------------+--------------------+
                                        |
-                    (Statically links libmilahaina_facehal_core)
+                    (Statically links libextra_facehal_core)
                                        v
                   +--------------------+--------------------+
-                  |     libmilahaina_facehal_core (Static)  |
+                  |     libextra_facehal_core (Static)  |
                   |  - Session management & camera pipeline |
                   |  - Keystore2 & template encryption      |
                   +--------------------+--------------------+
                                        |
-                    (Dynamically links libmilahaina_face_engine.so)
+                    (Dynamically links libextra_face_engine.so)
                                        v
                   +--------------------+--------------------+
-                  |      libmilahaina_face_engine (Shared)  |
+                  |      libextra_face_engine (Shared)  |
                   |  - Receives storage callbacks at init   |
                   |  - Resolves landmarks & face scores     |
                   |  - [Stub] or [Proprietary Engine]       |
                   +-----------------------------------------+
 ```
 
-1. **Service Daemon & Core HAL (`libmilahaina_facehal_core`)**:
+1. **Service Daemon & Core HAL (`libextra_facehal_core`)**:
    - Manages the biometric session lifecycle (enrollment, authentication, cancellation).
    - Operates the NDK Camera2 backend to capture incoming video frames.
    - Manages cryptographic keys via Android Keystore2 and handles persistent database storage/encryption.
 
-2. **Face Engine Interface (`libmilahaina_face_engine.so`)**:
+2. **Face Engine Interface (`libextra_face_engine.so`)**:
    - Acts as the main brain logic of the face-unlock pipeline (responsible for face detection, quality analysis, embedding extraction, and matching).
    - The core HAL registers functional callbacks (`FaceEngineCallbacks`) during initialization. Whenever the engine needs to save, load, or delete face embeddings, it invokes these callbacks.
    - Exposes a clean C++ public interface utilizing the **Pimpl (Pointer to Implementation)** pattern, hiding execution details from compiling clients.
 
-3. **Vision Service Interface (`vendor.milahaina.biometrics.face.IVisionService`)**:
+3. **Vision Service Interface (`vendor.extra.biometrics.face.IVisionService`)**:
    - A custom AIDL interface hosted by the HAL daemon alongside the standard Android `IFace` biometric interface.
    - Purpose: It serves as the framework bridge that allows system/platform application clients (such as the `FaceUnlock` app) to register callbacks and securely receive real-time camera frames and calculated landmark/pose coordinates.
    - Utilizes Ashmem (shared memory buffers) to transfer high-resolution frames efficiently, enabling fluid camera previews and face mesh animations during enrollment without blocking the core biometric pipeline.
@@ -84,19 +84,19 @@ The MiLahaina Face HAL is designed with a modular separation of concerns between
 
 ## Build System Configuration (Stub vs. Proprietary)
 
-The compilation behavior is governed by the Android Soong build configuration namespace `milahaina_facehal` and the modules defined in `lib/Android.bp`.
+The compilation behavior is governed by the Android Soong build configuration namespace `extra_facehal` and the modules defined in `lib/Android.bp`.
 
 ### 1. Prebuilt Proprietary Mode (Default)
-By default, the repository targets the prebuilt proprietary shared library (`lib/libmilahaina_face_engine.so`) using the `cc_prebuilt_library_shared` module in `lib/Android.bp`. This contains the fully optimized vendor engine with actual biometric algorithms.
+By default, the repository targets the prebuilt proprietary shared library (`lib/libextra_face_engine.so`) using the `cc_prebuilt_library_shared` module in `lib/Android.bp`. This contains the fully optimized vendor engine with actual biometric algorithms.
 
 ### 2. Open-Source Stub Mode
 If you wish to compile the engine from source using the open-source dummy stub (`lib/FaceEngineStub.cpp`) containing dummy biometric calls:
-1. Open `lib/Android.bp` and comment out the `cc_prebuilt_library_shared` module for `libmilahaina_face_engine`.
-2. Uncomment the `cc_library_shared` module for `libmilahaina_face_engine` that lists `FaceEngineStub.cpp` as a source.
+1. Open `lib/Android.bp` and comment out the `cc_prebuilt_library_shared` module for `libextra_face_engine`.
+2. Uncomment the `cc_library_shared` module for `libextra_face_engine` that lists `FaceEngineStub.cpp` as a source.
 3. Build the targets from your Android build environment root:
    ```bash
-   m libmilahaina_face_engine
-   m android.hardware.biometrics.face-service.milahaina
+   m libextra_face_engine
+   m android.hardware.biometrics.face-service.extra
    ```
 
 ---
@@ -116,14 +116,14 @@ Biometric templates are serialized into a binary stream containing:
 
 ### 2. Integrity Protection (KeyMint HMAC-SHA256)
 To detect offline tampering, the serialized binary is signed using a hardware-backed HMAC key.
-- **Key Alias**: `milahaina_face_template_hmac_sha256_v2`
+- **Key Alias**: `extra_face_template_hmac_sha256_v2`
 - **Namespace**: `65000` (Domain: `SELINUX`)
 - **Key Type**: 256-bit HMAC key generated and managed inside KeyMint.
 - The 256-bit signature (32 bytes) is appended directly to the end of the serialized payload. During deserialization, the MAC signature is verified prior to parsing.
 
 ### 3. Data Confidentiality (KeyMint AES-GCM-256)
 The MAC-signed serialized payload is encrypted using hardware-backed AES-GCM-256 keys generated per Android user.
-- **Key Alias**: `milahaina_face_template_aes_gcm_v2_user_<userId>`
+- **Key Alias**: `extra_face_template_aes_gcm_v2_user_<userId>`
 - **Namespace**: `65000` (Domain: `SELINUX`)
 - **Mode**: AES-GCM with a random 96-bit nonce and 128-bit authentication tag.
 - The encrypted output is formatted as a versioned storage payload:
@@ -150,7 +150,7 @@ Standard AIDL `IFace` sessions communicate status frames. When non-standard even
 
 ## IVisionService & Landmark Visualization
 
-The Face HAL exposes a vendor-specific AIDL interface alongside standard biometrics APIs: `vendor.milahaina.biometrics.face.IVisionService`.
+The Face HAL exposes a vendor-specific AIDL interface alongside standard biometrics APIs: `vendor.extra.biometrics.face.IVisionService`.
 
 ### 1. High-Performance Preview Delivery (Ashmem)
 Since raw high-resolution NV21 frames are too large to pass over Binder IPC, `IVisionService` uses Android Shared Memory (Ashmem):
@@ -174,11 +174,11 @@ These policies are automatically integrated into the Android build system when y
 
 ---
 
-## Face Engine Integration Options (`libmilahaina_face_engine`)
+## Face Engine Integration Options (`libextra_face_engine`)
 
 The build system supports selecting between two different prebuilt face engine implementations:
 
-### 1. Custom MiLahaina Library (`milahaina`)
+### 1. Custom Extra Library (`extra`)
 This is the default configuration, incorporating the custom face engine built specifically for this project.
 
 * **Face Detection & Landmarks:** Real-time CNN-based face detection (`FaceDetector`) tracking 6 key facial landmarks (12 coordinate values) to determine face position and size.
@@ -223,7 +223,7 @@ Create your custom implementation file implementing the interface in `include/Fa
 #include <mutex>
 
 namespace org {
-namespace milahaina {
+namespace extra {
 namespace face {
 namespace hal {
 
@@ -377,7 +377,7 @@ void FaceEngine::getSensorProps(aidl::android::hardware::biometrics::face::Senso
 
 } // namespace hal
 } // namespace face
-} // namespace milahaina
+} // namespace extra
 } // namespace org
 ```
 
@@ -385,13 +385,13 @@ void FaceEngine::getSensorProps(aidl::android::hardware::biometrics::face::Senso
 Update the target compiler rules to build the custom source file (e.g. by commenting out the prebuilt shared target and using `cc_library_shared` module):
 ```bp
 cc_library_shared {
-    name: "libmilahaina_face_engine",
+    name: "libextra_face_engine",
     vendor: true,
     defaults: [
-        "milahaina_facehal_logging_defaults",
+        "extra_facehal_logging_defaults",
     ],
-    header_libs: ["libmilahaina_facehal_headers"],
-    export_header_lib_headers: ["libmilahaina_facehal_headers"],
+    header_libs: ["libextra_facehal_headers"],
+    export_header_lib_headers: ["libextra_facehal_headers"],
     srcs: [
         "FaceEngineCustom.cpp",
     ],
@@ -410,9 +410,9 @@ cc_library_shared {
 
 ## Custom Enrollment App & Overlay (FaceUnlock)
 
-The repository includes a ready-to-use custom enrollment application (`MiLahainaVision`) and its runtime resource overlay configuration (`MiLahainaVisionOverlay`).
+The repository includes a ready-to-use custom enrollment application (`ExtraVision`) and its runtime resource overlay configuration (`ExtraVisionOverlay`).
 
-* **Enrollment App (`App/`)**: A system-privileged vendor application (`MiLahainaVision`) that binds to `IVisionService`, receives camera frames from the HAL, decodes them to show on screen, handles progress callbacks from `FaceManager`, and updates a face mesh overlay with calculated landmarks.
-* **System Overlay (`overlay/`)**: Overrides the Android Settings configuration to point Settings app face enrollment flow directly to the custom activity (`MiLahainaVision`).
+* **Enrollment App (`App/`)**: A system-privileged vendor application (`ExtraVision`) that binds to `IVisionService`, receives camera frames from the HAL, decodes them to show on screen, handles progress callbacks from `FaceManager`, and updates a face mesh overlay with calculated landmarks.
+* **System Overlay (`overlay/`)**: Overrides the Android Settings configuration to point Settings app face enrollment flow directly to the custom activity (`ExtraVision`).
 
 These components are automatically compiled and included in the vendor image when you include [facehal.mk](./facehal.mk) in your device's `device.mk`.

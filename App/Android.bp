@@ -1,5 +1,5 @@
 android_app {
-    name: "MiLahainaVisionPrivate",
+    name: "ExtraVisionPrivate",
     srcs: ["src/**/*.java", "src/**/*.kt"],
     static_libs: [
         "androidx.core_core",
@@ -7,7 +7,7 @@ android_app {
         "setup-wizard-lib",
         "setupcompat",
         "setupdesign",
-        "vendor.milahaina.biometrics.face-V2-java",
+        "vendor.extra.biometrics.face-V2-java",
     ],
     platform_apis: true,
     privileged: true,
@@ -15,17 +15,18 @@ android_app {
     optimize: {
         enabled: false,
     },
+    compile_dex: true,
     installable: false,
 }
 
 android_app_import {
-    name: "MiLahainaVision",
-    apk: ":MiLahainaVisionPrivate",
+    name: "ExtraVision",
+    apk: ":ExtraVisionPrivate{.apk}",
     privileged: true,
     vendor: true,
     required: [
-        "privapp_whitelist_org.milahaina.vision.xml",
-        "MiLahainaVisionOverlay",
+        "privapp_whitelist_org.extra.vision.xml",
+        "ExtraVisionOverlay",
     ],
     preprocessed: true,
     dex_preopt: {

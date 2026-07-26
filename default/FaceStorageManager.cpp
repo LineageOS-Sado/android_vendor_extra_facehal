@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "MiLahainaFaceHal"
+#define LOG_TAG "ExtraFaceHal"
 #include <log/log.h>
 #include "FaceStorageManager.h"
 #include <android-base/logging.h>

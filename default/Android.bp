@@ -15,18 +15,18 @@
 //
 
 soong_config_module_type {
-    name: "milahaina_facehal_cc_defaults",
+    name: "extra_facehal_cc_defaults",
     module_type: "cc_defaults",
-    config_namespace: "milahaina_facehal",
+    config_namespace: "extra_facehal",
     bool_variables: ["enable_logging"],
     properties: ["cflags"],
 }
 
-milahaina_facehal_cc_defaults {
-    name: "milahaina_facehal_logging_defaults",
+extra_facehal_cc_defaults {
+    name: "extra_facehal_logging_defaults",
 
     header_libs: [
-        "libmilahaina_facehal_headers",
+        "libextra_facehal_headers",
     ],
 
     shared_libs: [
@@ -38,21 +38,21 @@ milahaina_facehal_cc_defaults {
 
     cflags: [
         "-include FaceHalLogGuard.h",
-        "-DMILAHAINA_FACEHAL_ENABLE_LOGGING=0",
+        "-DEXTRA_FACEHAL_ENABLE_LOGGING=0",
     ],
 
     soong_config_variables: {
         enable_logging: {
             cflags: [
-                "-UMILAHAINA_FACEHAL_ENABLE_LOGGING",
-                "-DMILAHAINA_FACEHAL_ENABLE_LOGGING=1",
+                "-UEXTRA_FACEHAL_ENABLE_LOGGING",
+                "-DEXTRA_FACEHAL_ENABLE_LOGGING=1",
             ],
         },
     },
 }
 
 cc_defaults {
-    name: "milahaina_face_shared_defaults",
+    name: "extra_face_shared_defaults",
     shared_libs: [
         "libbase",
         "libbinder_ndk",
@@ -63,29 +63,29 @@ cc_defaults {
         "android.hardware.biometrics.face-V4-ndk",
         "android.hardware.biometrics.common-V4-ndk",
         "android.system.keystore2-V1-ndk",
-        "vendor.milahaina.biometrics.face-V2-ndk",
+        "vendor.extra.biometrics.face-V2-ndk",
         "libnativewindow",
         "libmediandk",
         "libcamera2ndk_vendor",
-        "libmilahaina_face_engine",
+        "libextra_face_engine",
     ],
 }
 
 cc_library_headers {
-    name: "libmilahaina_facehal_headers",
+    name: "libextra_facehal_headers",
     vendor: true,
     export_include_dirs: ["include"],
 }
 
 cc_library_static {
-    name: "libmilahaina_facehal_core",
+    name: "libextra_facehal_core",
     vendor: true,
     defaults: [
-        "milahaina_facehal_logging_defaults",
-        "milahaina_face_shared_defaults",
+        "extra_facehal_logging_defaults",
+        "extra_face_shared_defaults",
     ],
-    header_libs: ["libmilahaina_facehal_headers"],
-    export_header_lib_headers: ["libmilahaina_facehal_headers"],
+    header_libs: ["libextra_facehal_headers"],
+    export_header_lib_headers: ["libextra_facehal_headers"],
     srcs: [
         "Face.cpp",
         "Session.cpp",
@@ -100,19 +100,19 @@ cc_library_static {
 }
 
 cc_binary {
-    name: "android.hardware.biometrics.face-service.milahaina",
+    name: "android.hardware.biometrics.face-service.extra",
     relative_install_path: "hw",
-    init_rc: ["face-hal-milahaina.rc"],
-    vintf_fragments: ["face-hal-milahaina.xml"],
+    init_rc: ["face-hal-extra.rc"],
+    vintf_fragments: ["face-hal-extra.xml"],
     vendor: true,
     defaults: [
-        "milahaina_facehal_logging_defaults",
-        "milahaina_face_shared_defaults",
+        "extra_facehal_logging_defaults",
+        "extra_face_shared_defaults",
     ],
     srcs: [
         "service.cpp",
     ],
     static_libs: [
-        "libmilahaina_facehal_core",
+        "libextra_facehal_core",
     ],
 }

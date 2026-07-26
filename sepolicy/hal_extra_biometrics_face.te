@@ -1,0 +1,49 @@
+type hal_extra_biometrics_face, domain;
+type hal_extra_biometrics_face_exec, exec_type, vendor_file_type, file_type;
+type hal_extra_biometrics_face_data_file, file_type, data_file_type;
+type hal_extra_biometrics_face_keystore2_key, keystore2_key_type;
+
+init_daemon_domain(hal_extra_biometrics_face)
+
+hal_server_domain(hal_extra_biometrics_face, hal_face)
+
+#Access for graphics buffer
+hal_client_domain(hal_extra_biometrics_face, hal_graphics_allocator);
+
+typeattribute hal_extra_biometrics_face hal_camera_client;
+
+allow hal_extra_biometrics_face fwk_camera_hwservice:hwservice_manager find;
+allow hal_extra_biometrics_face hidl_token_hwservice:hwservice_manager find;
+
+dontaudit hal_extra_biometrics_face system_file:file *;
+
+# Allow access to camera service for NDK Camera API
+allow hal_extra_biometrics_face cameraserver_service:service_manager find;
+binder_call(hal_extra_biometrics_face, cameraserver)
+
+# Allow access to AIDL Camera Provider
+allow hal_extra_biometrics_face fwk_camera_service:service_manager find;
+allow hal_extra_biometrics_face hal_camera_service:service_manager find;
+binder_call(hal_extra_biometrics_face, hal_camera_server)
+binder_call(hal_extra_biometrics_face, hal_camera_default)
+
+# Allow access to Keystore2
+allow hal_extra_biometrics_face keystore_service:service_manager find;
+binder_call(hal_extra_biometrics_face, keystore)
+allow hal_extra_biometrics_face hal_extra_biometrics_face_keystore2_key:keystore2_key { get_info rebind use };
+
+# Allow binder calls to the vision app for callbacks
+binder_call(hal_extra_biometrics_face, platform_app)
+
+# Allow reading camera configuration properties
+get_prop(hal_extra_biometrics_face, camera_config_prop)
+
+#  Access for /data/vendor/biometrics/face
+allow hal_extra_biometrics_face hal_extra_biometrics_face_data_file:dir create_dir_perms;
+allow hal_extra_biometrics_face hal_extra_biometrics_face_data_file:file create_file_perms;
+
+# Allow reading model files from /vendor/etc/face
+r_dir_file(hal_extra_biometrics_face, vendor_configs_file)
+
+# Allow NNAPI delegate to talk to Neural Networks HAL (Hexagon DSP)
+hal_client_domain(hal_extra_biometrics_face, hal_neuralnetworks)

@@ -14,28 +14,28 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := $(call my-dir)
+EXTRA_FACEHAL_PATH := vendor/extra/facehal
 
 # Face HAL Service, Enrollment App, and Overlays
 PRODUCT_PACKAGES += \
-    android.hardware.biometrics.face-service.milahaina \
-    MiLahainaVision \
-    MiLahainaVisionOverlay
+    android.hardware.biometrics.face-service.extra \
+    ExtraVision \
+    ExtraVisionOverlay
 
 # Face HAL SELinux Policies
 BOARD_VENDOR_SEPOLICY_DIRS += \
-    $(LOCAL_PATH)/sepolicy
+    $(EXTRA_FACEHAL_PATH)/sepolicy
 
 # Enable Logging
-MILAHAINA_FACEHAL_ENABLE_LOGGING ?= false
-$(call add_soong_config_namespace,milahaina_facehal)
-$(call add_soong_config_var_value,milahaina_facehal,enable_logging,$(MILAHAINA_FACEHAL_ENABLE_LOGGING))
+EXTRA_FACEHAL_ENABLE_LOGGING ?= false
+$(call add_soong_config_namespace,extra_facehal)
+$(call add_soong_config_var_value,extra_facehal,enable_logging,$(EXTRA_FACEHAL_ENABLE_LOGGING))
 
-# Face Engine Model Type (milahaina or megvii)
-MILAHAINA_FACEHAL_ENGINE_MODEL ?= milahaina
+# Face Engine Model Type (extra or megvii)
+EXTRA_FACEHAL_ENGINE_MODEL ?= extra
 
-ifeq ($(MILAHAINA_FACEHAL_ENGINE_MODEL),megvii)
-PRODUCT_SOONG_NAMESPACES += $(LOCAL_PATH)/lib/megvii
+ifeq ($(EXTRA_FACEHAL_ENGINE_MODEL),megvii)
+PRODUCT_SOONG_NAMESPACES += $(EXTRA_FACEHAL_PATH)/lib/megvii
 else
-PRODUCT_SOONG_NAMESPACES += $(LOCAL_PATH)/lib/milahaina
+PRODUCT_SOONG_NAMESPACES += $(EXTRA_FACEHAL_PATH)/lib/extra
 endif

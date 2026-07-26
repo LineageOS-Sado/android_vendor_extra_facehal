@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "MiLahainaFaceHal"
+#define LOG_TAG "ExtraFaceHal"
 
 #include "CryptoClient.h"
 
@@ -67,7 +67,7 @@ constexpr uint8_t kStoragePayloadVersion = 1;
 constexpr size_t kMaxNonceSize = 32;
 
 std::string StorageAliasForUser(int32_t userId) {
-    return "milahaina_face_template_aes_gcm_v2_user_" + std::to_string(userId);
+    return "extra_face_template_aes_gcm_v2_user_" + std::to_string(userId);
 }
 
 KeyParameter Purpose(KeyPurpose purpose) {
@@ -227,7 +227,7 @@ KeyDescriptor CryptoClient::getMacKeyDescriptor() const {
     return {
             .domain = Domain::SELINUX,
             .nspace = kFaceHalKeystoreNamespace,
-            .alias = "milahaina_face_template_hmac_sha256_v2",
+            .alias = "extra_face_template_hmac_sha256_v2",
             .blob = {},
     };
 }

@@ -1,11 +1,11 @@
 #pragma once
 
 // Default to logging enabled unless overridden by Soong config.
-#ifndef MILAHAINA_FACEHAL_ENABLE_LOGGING
-#define MILAHAINA_FACEHAL_ENABLE_LOGGING 1
+#ifndef EXTRA_FACEHAL_ENABLE_LOGGING
+#define EXTRA_FACEHAL_ENABLE_LOGGING 1
 #endif
 
-#if !MILAHAINA_FACEHAL_ENABLE_LOGGING
+#if !EXTRA_FACEHAL_ENABLE_LOGGING
 
 // Include standard log headers first to set their header guards
 // and prevent them from overriding our macro definitions later.
@@ -15,7 +15,7 @@
 #include <utils/Log.h>
 #include <cutils/log.h>
 
-namespace org::milahaina::face::hal::logging {
+namespace org::extra::face::hal::logging {
 class NullLogMessage {
  public:
   template <typename T>
@@ -23,12 +23,12 @@ class NullLogMessage {
     return *this;
   }
 };
-}  // namespace org::milahaina::face::hal::logging
+}  // namespace org::extra::face::hal::logging
 
 #ifdef LOG
 #undef LOG
 #endif
-#define LOG(severity) ::org::milahaina::face::hal::logging::NullLogMessage()
+#define LOG(severity) ::org::extra::face::hal::logging::NullLogMessage()
 
 #ifdef ALOGV
 #undef ALOGV

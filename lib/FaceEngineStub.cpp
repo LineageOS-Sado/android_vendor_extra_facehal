@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "MiLahainaFaceHalStub"
+#define LOG_TAG "ExtraFaceHalStub"
 
 #include "FaceEngine.h"
 #include "FaceTemplateSerializer.h"
@@ -58,18 +58,16 @@ void FaceEngine::getSensorProps(aidl::android::hardware::biometrics::face::Senso
     props.commonProps.maxEnrollmentsPerUser = 3;
 
     ComponentInfo info;
-    info.componentId = "milahaina_face_engine_stub";
+    info.componentId = "extra_face_engine_stub";
     info.hardwareVersion = "Stub-Hardware";
     info.firmwareVersion = "Stub-Firmware-v1.0.0";
-    info.serialNumber = "MiLahaina-Stub-Serial";
-    info.softwareVersion = "MiLahaina-Stub-Engine-v1.0.0";
+    info.serialNumber = "Extra-Stub-Serial";
+    info.softwareVersion = "Extra-Stub-Engine-v1.0.0";
 
     props.commonProps.componentInfo = {info};
     props.sensorType = FaceSensorType::RGB;
     props.supportsDetectInteraction = false;
     props.halControlsPreview = false;
-    props.previewWidth = 640;
-    props.previewHeight = 480;
     props.enrollPreviewScale = 1.0f;
 }
 

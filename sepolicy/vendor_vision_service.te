@@ -1,12 +1,12 @@
-# Service type for vendor.milahaina.biometrics.face.IVisionService
+# Service type for vendor.extra.biometrics.face.IVisionService
 type vendor_vision_service, service_manager_type, hal_service_type;
 
-# Allow hal_milahaina_biometrics_face domain to register IVisionService with ServiceManager
-allow hal_milahaina_biometrics_face vendor_vision_service:service_manager { add find };
+# Allow hal_extra_biometrics_face domain to register IVisionService with ServiceManager
+allow hal_extra_biometrics_face vendor_vision_service:service_manager { add find };
 
 # Allow FaceUnlock app (platform_app / system_app) to find and call IVisionService
 allow platform_app vendor_vision_service:service_manager find;
-binder_call(platform_app, hal_milahaina_biometrics_face)
+binder_call(platform_app, hal_extra_biometrics_face)
 
 allow system_app vendor_vision_service:service_manager find;
-binder_call(system_app, hal_milahaina_biometrics_face)
+binder_call(system_app, hal_extra_biometrics_face)

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <aidl/vendor/milahaina/biometrics/face/BnVisionService.h>
+#include <aidl/vendor/extra/biometrics/face/BnVisionService.h>
 #include <atomic>
 #include <mutex>
 #include <sys/mman.h>
@@ -28,8 +28,8 @@ namespace milahaina {
 namespace face {
 namespace hal {
 
-using aidl::vendor::milahaina::biometrics::face::BnVisionService;
-using aidl::vendor::milahaina::biometrics::face::IVisionService;
+using aidl::vendor::extra::biometrics::face::BnVisionService;
+using aidl::vendor::extra::biometrics::face::IVisionService;
 using ndk::ScopedAStatus;
 
 class VisionServiceImpl : public BnVisionService {

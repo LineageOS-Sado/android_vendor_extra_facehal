@@ -14,29 +14,33 @@
 // limitations under the License.
 //
 
-//cc_library_shared {
-//    name: "libmilahaina_face_engine",
-//    vendor: true,
-//    defaults: [
-//        "milahaina_facehal_logging_defaults",
-//    ],
-//    srcs: [
-//        "FaceEngineStub.cpp",
-//    ],
-//    cflags: [
-//        "-Wall",
-//        "-Werror",
-//        "-O3",
-//        "-std=c++17",
-//    ],
-//    shared_libs: [
-//        "android.hardware.biometrics.face-V4-ndk",
-//        "android.hardware.biometrics.common-V4-ndk",
-//        "libbase",
-//        "liblog",
-//    ],
-//    header_libs: [
-//        "libmilahaina_facehal_headers",
-//    ],
-//    export_header_lib_headers: ["libmilahaina_facehal_headers"],
-//}
+// cc_library_shared {
+//     name: "libextra_face_engine",
+//     vendor: true,
+//     defaults: [
+//         "extra_facehal_logging_defaults",
+//     ],
+//     srcs: [
+//         "FaceEngineStub.cpp",
+//     ],
+//     cflags: [
+//         "-Wall",
+//         "-Werror",
+//         "-O3",
+//         "-std=c++17",
+//     ],
+//     shared_libs: [
+//         "android.hardware.biometrics.face-V4-ndk",
+//         "android.hardware.biometrics.common-V4-ndk",
+//         "android.system.keystore2-V1-ndk",
+//         "libbase",
+//         "libcrypto",
+//         "libcutils",
+//         "liblog",
+//         "libutils",
+//     ],
+//     header_libs: [
+//         "libextra_facehal_headers",
+//     ],
+//     export_header_lib_headers: ["libextra_facehal_headers"],
+// }

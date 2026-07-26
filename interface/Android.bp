@@ -1,8 +1,8 @@
 aidl_interface {
-    name: "vendor.milahaina.biometrics.face",
+    name: "vendor.extra.biometrics.face",
     vendor_available: true,
     srcs: [
-        "vendor/milahaina/biometrics/face/*.aidl",
+        "vendor/extra/biometrics/face/*.aidl",
     ],
     local_include_dir: ".",
     stability: "vintf",

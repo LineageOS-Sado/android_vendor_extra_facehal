@@ -1,2 +1,2 @@
-/vendor/bin/hw/android\.hardware\.biometrics\.face-service\.milahaina u:object_r:hal_milahaina_biometrics_face_exec:s0
-/data/vendor/biometrics/face(/.*)?                                  u:object_r:hal_milahaina_biometrics_face_data_file:s0
+/vendor/bin/hw/android\.hardware\.biometrics\.face-service\.extra u:object_r:hal_extra_biometrics_face_exec:s0
+/data/vendor/biometrics/face(/.*)?                                  u:object_r:hal_extra_biometrics_face_data_file:s0

@@ -1,4 +1,4 @@
-#define LOG_TAG "MiLahainaFaceHal"
+#define LOG_TAG "ExtraFaceHal"
 
 #include "Camera2NdkBackend.h"
 #include "FaceEngine.h"

@@ -2,15 +2,15 @@ soong_namespace {
 }
 
 cc_prebuilt_library_shared {
-    name: "libmilahaina_face_engine",
-    owner: "milahaina",
+    name: "libextra_face_engine",
+    owner: "extra",
     strip: {
         none: true,
     },
     target: {
         android_arm64: {
             srcs: [
-                "libmilahaina_face_engine.so",
+                "libextra_face_engine.so",
             ],
             shared_libs: [
                 "android.hardware.biometrics.face-V4-ndk",
