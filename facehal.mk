@@ -22,6 +22,11 @@ PRODUCT_PACKAGES += \
     ExtraVision \
     ExtraVisionOverlay
 
+# Advertise face authentication so SystemServer starts FaceService and Settings
+# exposes face enrollment.
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.biometrics.face.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.biometrics.face.xml
+
 # Face HAL SELinux Policies
 BOARD_VENDOR_SEPOLICY_DIRS += \
     $(EXTRA_FACEHAL_PATH)/sepolicy
