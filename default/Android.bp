@@ -53,6 +53,7 @@ extra_facehal_cc_defaults {
 
 cc_defaults {
     name: "extra_face_shared_defaults",
+    compile_multilib: "64",
     shared_libs: [
         "libbase",
         "libbinder_ndk",
